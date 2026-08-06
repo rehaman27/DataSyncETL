@@ -6,7 +6,7 @@ venv/
 
 # Python Cache
 __pycache__/
-*.pyc
+*.py[cod]
 
 # VS Code
 .vscode/
@@ -14,9 +14,6 @@ __pycache__/
 # Logs
 logs/
 *.log
-
-# macOS
-.DS_Store
 
 # Test Cache
 .pytest_cache/
@@ -31,3 +28,7 @@ build/
 
 # IDE
 .idea/
+
+# OS
+.DS_Store
+Thumbs.db
