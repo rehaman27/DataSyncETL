@@ -1,6 +1,9 @@
-import requests
+import time
+
+from requests import Response
 
 from config.settings import settings
+from utils.retry import make_request
 
 
 class StripeExtractor:
@@ -9,42 +12,38 @@ class StripeExtractor:
 
     def __init__(self):
         if not settings.STRIPE_API_KEY:
-            raise ValueError("STRIPE_API_KEY is not configured in .env")
+            raise ValueError(
+                "STRIPE_API_KEY is not configured in .env"
+            )
 
         self.headers = {
-            "Authorization": f"Bearer {settings.STRIPE_API_KEY}"
+            "Authorization": (
+                f"Bearer {settings.STRIPE_API_KEY}"
+            )
         }
 
-    def get_customers(self, limit=100):
+    def _request(self, params):
         """
-        Fetch a single page of customers from Stripe.
+        Send request to Stripe with retry
+        and rate-limit handling.
         """
 
         url = f"{self.BASE_URL}/customers"
 
-        params = {
-            "limit": limit
-        }
-
-        response = requests.get(
+        response: Response = make_request(
+            "GET",
             url,
             headers=self.headers,
             params=params,
             timeout=30
         )
 
-        response.raise_for_status()
-
-        return response.json()
+        return response
 
     def get_all_customers(self, limit=100):
-        """
-        Fetch all customers using Stripe cursor-based pagination.
-        """
-
-        url = f"{self.BASE_URL}/customers"
 
         all_customers = []
+
         starting_after = None
 
         while True:
@@ -56,28 +55,46 @@ class StripeExtractor:
             if starting_after:
                 params["starting_after"] = starting_after
 
-            response = requests.get(
-                url,
-                headers=self.headers,
-                params=params,
-                timeout=30
-            )
+            response = self._request(params)
 
-            response.raise_for_status()
+            # Rate limit
+            if response.status_code == 429:
+
+                retry_after = response.headers.get(
+                    "Retry-After",
+                    "2"
+                )
+
+                wait_time = int(retry_after)
+
+                print(
+                    f"Rate limit reached. "
+                    f"Waiting {wait_time} seconds..."
+                )
+
+                time.sleep(wait_time)
+
+                continue
 
             result = response.json()
 
-            customers = result.get("data", [])
+            customers = result.get(
+                "data",
+                []
+            )
 
             all_customers.extend(customers)
 
-            print(f"Fetched {len(customers)} customers")
+            print(
+                f"Fetched {len(customers)} customers | "
+                f"Total: {len(all_customers)}"
+            )
 
-            # Stop when Stripe says there are no more records
+            # No more pages
             if not result.get("has_more"):
                 break
 
-            # Use the last customer's ID as the cursor
+            # Safety check
             if not customers:
                 break
 
