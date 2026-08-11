@@ -1,10 +1,11 @@
+import requests
+
 from tenacity import (
     retry,
+    retry_if_exception_type,
     stop_after_attempt,
     wait_exponential,
-    retry_if_exception_type,
 )
-import requests
 
 
 @retry(
@@ -26,12 +27,6 @@ def make_request(method, url, **kwargs):
         url,
         **kwargs
     )
-
-    if response.status_code == 429:
-        raise requests.exceptions.HTTPError(
-            "Stripe rate limit exceeded",
-            response=response
-        )
 
     response.raise_for_status()
 
