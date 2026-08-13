@@ -2,25 +2,45 @@ from datetime import datetime
 
 from extract.stripe import StripeExtractor
 from storage.raw_storage import save_json
+from utils.logger import logger
 
 
 def main():
 
-    print("DataSync ETL Pipeline Started")
+    logger.info("DataSync ETL Pipeline Started")
 
-    extractor = StripeExtractor()
+    try:
 
-    customers = extractor.get_all_customers()
+        extractor = StripeExtractor()
 
-    filename = (
-        f"customers_"
-        f"{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-    )
+        customers = extractor.get_all_customers()
 
-    file_path = save_json(customers, filename)
+        filename = (
+            f"customers_"
+            f"{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        )
 
-    print(f"Total customers extracted: {len(customers)}")
-    print(f"Raw data saved to: {file_path}")
+        file_path = save_json(
+            customers,
+            filename
+        )
+
+        logger.info(
+            f"Total customers extracted: "
+            f"{len(customers)}"
+        )
+
+        logger.info(
+            f"Raw data saved to: {file_path}"
+        )
+
+    except Exception as error:
+
+        logger.error(
+            f"ETL pipeline failed: {error}"
+        )
+
+        raise
 
 
 if __name__ == "__main__":
