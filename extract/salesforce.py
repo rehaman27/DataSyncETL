@@ -1,9 +1,12 @@
 import requests
 
 from config.settings import settings
+from utils.logger import logger
 
 
 class SalesforceExtractor:
+
+    API_VERSION = "v61.0"
 
     def __init__(self):
         self.access_token = None
@@ -11,11 +14,8 @@ class SalesforceExtractor:
 
     def authenticate(self):
         """
-        Authenticate with Salesforce.
-
-        Authentication details depend on the
-        Salesforce OAuth configuration provided
-        by the organization.
+        Authenticate with Salesforce using OAuth
+        username-password flow.
         """
 
         if not settings.SALESFORCE_LOGIN_URL:
@@ -43,7 +43,48 @@ class SalesforceExtractor:
                 "SALESFORCE_PASSWORD is not configured"
             )
 
-        raise NotImplementedError(
-            "Configure the Salesforce OAuth flow "
-            "provided by Zaalima before implementing authentication."
+        if not settings.SALESFORCE_SECURITY_TOKEN:
+            raise ValueError(
+                "SALESFORCE_SECURITY_TOKEN is not configured"
+            )
+
+        token_url = (
+            f"{settings.SALESFORCE_LOGIN_URL}"
+            "/services/oauth2/token"
         )
+
+        password = (
+            f"{settings.SALESFORCE_PASSWORD}"
+            f"{settings.SALESFORCE_SECURITY_TOKEN}"
+        )
+
+        payload = {
+            "grant_type": "password",
+            "client_id": settings.SALESFORCE_CLIENT_ID,
+            "client_secret": settings.SALESFORCE_CLIENT_SECRET,
+            "username": settings.SALESFORCE_USERNAME,
+            "password": password,
+        }
+
+        logger.info(
+            "Authenticating with Salesforce"
+        )
+
+        response = requests.post(
+            token_url,
+            data=payload,
+            timeout=30
+        )
+
+        response.raise_for_status()
+
+        result = response.json()
+
+        self.access_token = result["access_token"]
+        self.instance_url = result["instance_url"]
+
+        logger.info(
+            "Salesforce authentication successful"
+        )
+
+        return self.access_token
