@@ -12,41 +12,41 @@ class SalesforceExtractor:
         self.access_token = None
         self.instance_url = None
 
+    def validate_configuration(self):
+        """
+        Validate required Salesforce configuration.
+        """
+
+        required_settings = {
+            "SALESFORCE_LOGIN_URL": settings.SALESFORCE_LOGIN_URL,
+            "SALESFORCE_CLIENT_ID": settings.SALESFORCE_CLIENT_ID,
+            "SALESFORCE_CLIENT_SECRET": settings.SALESFORCE_CLIENT_SECRET,
+            "SALESFORCE_USERNAME": settings.SALESFORCE_USERNAME,
+            "SALESFORCE_PASSWORD": settings.SALESFORCE_PASSWORD,
+            "SALESFORCE_SECURITY_TOKEN": (
+                settings.SALESFORCE_SECURITY_TOKEN
+            ),
+        }
+
+        missing = [
+            name
+            for name, value in required_settings.items()
+            if not value
+        ]
+
+        if missing:
+            raise ValueError(
+                "Missing Salesforce configuration: "
+                + ", ".join(missing)
+            )
+
     def authenticate(self):
         """
-        Authenticate with Salesforce using OAuth
-        username-password flow.
+        Authenticate with Salesforce using
+        OAuth username-password flow.
         """
 
-        if not settings.SALESFORCE_LOGIN_URL:
-            raise ValueError(
-                "SALESFORCE_LOGIN_URL is not configured"
-            )
-
-        if not settings.SALESFORCE_CLIENT_ID:
-            raise ValueError(
-                "SALESFORCE_CLIENT_ID is not configured"
-            )
-
-        if not settings.SALESFORCE_CLIENT_SECRET:
-            raise ValueError(
-                "SALESFORCE_CLIENT_SECRET is not configured"
-            )
-
-        if not settings.SALESFORCE_USERNAME:
-            raise ValueError(
-                "SALESFORCE_USERNAME is not configured"
-            )
-
-        if not settings.SALESFORCE_PASSWORD:
-            raise ValueError(
-                "SALESFORCE_PASSWORD is not configured"
-            )
-
-        if not settings.SALESFORCE_SECURITY_TOKEN:
-            raise ValueError(
-                "SALESFORCE_SECURITY_TOKEN is not configured"
-            )
+        self.validate_configuration()
 
         token_url = (
             f"{settings.SALESFORCE_LOGIN_URL}"
@@ -67,7 +67,7 @@ class SalesforceExtractor:
         }
 
         logger.info(
-            "Authenticating with Salesforce"
+            "Starting Salesforce authentication"
         )
 
         response = requests.post(

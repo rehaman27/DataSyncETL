@@ -1,3 +1,4 @@
+import pytest
 from unittest.mock import patch
 
 from extract.salesforce import SalesforceExtractor
@@ -48,4 +49,37 @@ def test_salesforce_authentication():
 
         assert extractor.instance_url == (
             "https://example.salesforce.com"
+        )
+
+
+def test_salesforce_configuration_validation():
+
+    extractor = SalesforceExtractor()
+
+    with patch(
+        "extract.salesforce.settings.SALESFORCE_LOGIN_URL",
+        None
+    ), patch(
+        "extract.salesforce.settings.SALESFORCE_CLIENT_ID",
+        None
+    ), patch(
+        "extract.salesforce.settings.SALESFORCE_CLIENT_SECRET",
+        None
+    ), patch(
+        "extract.salesforce.settings.SALESFORCE_USERNAME",
+        None
+    ), patch(
+        "extract.salesforce.settings.SALESFORCE_PASSWORD",
+        None
+    ), patch(
+        "extract.salesforce.settings.SALESFORCE_SECURITY_TOKEN",
+        None
+    ):
+
+        with pytest.raises(ValueError) as error:
+
+            extractor.validate_configuration()
+
+        assert "Missing Salesforce configuration" in str(
+            error.value
         )
