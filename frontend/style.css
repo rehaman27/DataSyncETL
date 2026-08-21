@@ -1,0 +1,390 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #1f2937;
+}
+
+
+.header {
+    background: #111827;
+    color: white;
+
+    padding: 25px 50px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.header h1 {
+    font-size: 28px;
+}
+
+
+.header p {
+    margin-top: 5px;
+    color: #cbd5e1;
+}
+
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+
+    background: #22c55e;
+
+    border-radius: 50%;
+}
+
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+
+    padding: 35px 25px;
+}
+
+
+section {
+    margin-bottom: 35px;
+}
+
+
+h2 {
+    margin-bottom: 18px;
+}
+
+
+/* Overview Cards */
+
+.cards {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+}
+
+
+.card {
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0, 0, 0, 0.08);
+}
+
+
+.card h3 {
+    font-size: 15px;
+
+    color: #64748b;
+
+    margin-bottom: 15px;
+}
+
+
+.card p {
+    font-size: 28px;
+
+    font-weight: bold;
+}
+
+
+.success {
+    color: #16a34a;
+}
+
+
+/* Sources */
+
+.source-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+}
+
+
+.source-card {
+    background: white;
+
+    padding: 20px;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0, 0, 0, 0.08);
+}
+
+
+.source-card p {
+    color: #64748b;
+
+    margin-top: 5px;
+}
+
+
+.badge {
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+}
+
+
+.completed {
+    background: #dcfce7;
+
+    color: #166534;
+}
+
+
+.pending {
+    background: #fef3c7;
+
+    color: #92400e;
+}
+
+
+/* Pipeline */
+
+.pipeline {
+    background: white;
+
+    padding: 30px;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 20px;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0, 0, 0, 0.08);
+}
+
+
+.pipeline-step {
+    text-align: center;
+
+    min-width: 150px;
+}
+
+
+.pipeline-step span {
+    display: flex;
+
+    width: 40px;
+    height: 40px;
+
+    margin: auto auto 10px;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #e5e7eb;
+
+    font-weight: bold;
+}
+
+
+.pipeline-step.active span {
+    background: #16a34a;
+
+    color: white;
+}
+
+
+.pipeline-step p {
+    color: #64748b;
+
+    margin-top: 5px;
+}
+
+
+.arrow {
+    font-size: 30px;
+
+    color: #64748b;
+}
+
+
+/* Execution */
+
+.execution {
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 10px;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 30px;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0, 0, 0, 0.08);
+}
+
+
+.execution p {
+    margin: 12px 0;
+}
+
+
+.raw-data {
+    background: #f8fafc;
+
+    padding: 20px;
+
+    border-radius: 8px;
+}
+
+
+code {
+    background: #111827;
+
+    color: #22c55e;
+
+    padding: 10px;
+
+    display: inline-block;
+
+    border-radius: 5px;
+
+    margin-top: 8px;
+}
+
+
+/* Buttons */
+
+.actions {
+    display: flex;
+
+    gap: 15px;
+}
+
+
+button {
+    border: none;
+
+    background: #2563eb;
+
+    color: white;
+
+    padding: 12px 20px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+
+button:hover {
+    background: #1d4ed8;
+}
+
+
+/* Footer */
+
+footer {
+    text-align: center;
+
+    padding: 25px;
+
+    background: #111827;
+
+    color: #cbd5e1;
+}
+
+
+/* Responsive */
+
+@media (max-width: 900px) {
+
+    .cards {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .source-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pipeline {
+        flex-direction: column;
+    }
+
+    .arrow {
+        transform: rotate(90deg);
+    }
+
+    .execution {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .header {
+        padding: 20px;
+
+        flex-direction: column;
+
+        gap: 15px;
+
+        align-items: flex-start;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}

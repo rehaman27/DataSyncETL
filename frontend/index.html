@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>DataSync ETL Dashboard</title>
+
+    <link rel="stylesheet"
+          href="style.css">
+</head>
+
+<body>
+
+    <header class="header">
+
+        <div>
+            <h1>DataSync ETL</h1>
+            <p>Enterprise Data Pipeline Monitoring</p>
+        </div>
+
+        <div class="status">
+            <span class="status-dot"></span>
+            Pipeline Online
+        </div>
+
+    </header>
+
+
+    <main class="container">
+
+        <!-- Overview -->
+
+        <section>
+
+            <h2>Pipeline Overview</h2>
+
+            <div class="cards">
+
+                <div class="card">
+                    <h3>Pipeline Status</h3>
+                    <p class="success">Completed</p>
+                </div>
+
+                <div class="card">
+                    <h3>Records Extracted</h3>
+                    <p id="recordsExtracted">4</p>
+                </div>
+
+                <div class="card">
+                    <h3>Records Loaded</h3>
+                    <p id="recordsLoaded">4</p>
+                </div>
+
+                <div class="card">
+                    <h3>Tests Passed</h3>
+                    <p>9 / 9</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Data Sources -->
+
+        <section>
+
+            <h2>Data Sources</h2>
+
+            <div class="source-grid">
+
+                <div class="source-card">
+
+                    <div>
+                        <h3>Stripe</h3>
+                        <p>Customer API</p>
+                    </div>
+
+                    <span class="badge completed">
+                        Connected
+                    </span>
+
+                </div>
+
+
+                <div class="source-card">
+
+                    <div>
+                        <h3>Salesforce</h3>
+                        <p>CRM Data</p>
+                    </div>
+
+                    <span class="badge pending">
+                        Pending
+                    </span>
+
+                </div>
+
+
+                <div class="source-card">
+
+                    <div>
+                        <h3>Zendesk</h3>
+                        <p>Support Data</p>
+                    </div>
+
+                    <span class="badge pending">
+                        Pending
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ETL Flow -->
+
+        <section>
+
+            <h2>ETL Pipeline</h2>
+
+            <div class="pipeline">
+
+                <div class="pipeline-step active">
+                    <span>1</span>
+                    <h3>Extract</h3>
+                    <p>Stripe API</p>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="pipeline-step active">
+                    <span>2</span>
+                    <h3>Validate</h3>
+                    <p>Data Validation</p>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="pipeline-step active">
+                    <span>3</span>
+                    <h3>Transform</h3>
+                    <p>Data Processing</p>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="pipeline-step active">
+                    <span>4</span>
+                    <h3>Load</h3>
+                    <p>SQLite</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Execution -->
+
+        <section class="execution">
+
+            <div>
+
+                <h2>Latest Execution</h2>
+
+                <p>
+                    <strong>Status:</strong>
+                    <span class="success">
+                        Successfully Completed
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Source:</strong>
+                    Stripe
+                </p>
+
+                <p>
+                    <strong>Destination:</strong>
+                    SQLite Database
+                </p>
+
+                <p>
+                    <strong>Records:</strong>
+                    <span id="recordSummary">
+                        4 customers
+                    </span>
+                </p>
+
+            </div>
+
+
+            <div class="raw-data">
+
+                <h2>Raw Data</h2>
+
+                <p>
+                    Stored in:
+                </p>
+
+                <code>
+                    raw_data/stripe/
+                </code>
+
+            </div>
+
+        </section>
+
+
+        <!-- Actions -->
+
+        <section class="actions">
+
+            <button onclick="refreshDashboard()">
+                Refresh Dashboard
+            </button>
+
+            <button onclick="showPipelineInfo()">
+                View Pipeline Info
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            DataSync ETL | Enterprise Data Engineering Project
+        </p>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

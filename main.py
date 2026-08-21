@@ -2,29 +2,38 @@ from datetime import datetime
 
 from extract.stripe import StripeExtractor
 from storage.raw_storage import save_json
+from load.sqlite import (
+    create_customers_table,
+    load_customers
+)
 from utils.logger import logger
-from utils.health_check import check_configuration
 
 
 def main():
 
-    logger.info("DataSync ETL Pipeline Started")
-
-    # Configuration health check
-    checks = check_configuration()
-
-    logger.info("Configuration Health Check:")
-
-    for name, status in checks.items():
-        logger.info(
-            f"{name}: {'OK' if status else 'NOT CONFIGURED'}"
-        )
+    logger.info(
+        "DataSync ETL Pipeline Started"
+    )
 
     try:
 
+        # =========================
+        # EXTRACT
+        # =========================
+
         extractor = StripeExtractor()
 
-        customers = extractor.get_all_customers()
+        customers = (
+            extractor.get_all_customers()
+        )
+
+        logger.info(
+            f"Extracted {len(customers)} customers"
+        )
+
+        # =========================
+        # RAW STORAGE
+        # =========================
 
         filename = (
             f"customers_"
@@ -37,12 +46,19 @@ def main():
         )
 
         logger.info(
-            f"Total customers extracted: "
-            f"{len(customers)}"
+            f"Raw data saved to: {file_path}"
         )
 
+        # =========================
+        # DATABASE
+        # =========================
+
+        create_customers_table()
+
+        load_customers(customers)
+
         logger.info(
-            f"Raw data saved to: {file_path}"
+            "ETL pipeline completed successfully"
         )
 
     except Exception as error:

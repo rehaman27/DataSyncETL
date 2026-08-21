@@ -28,6 +28,11 @@ def make_request(method, url, **kwargs):
         **kwargs
     )
 
+    # Authentication errors should fail immediately.
+    if response.status_code == 401:
+        response.raise_for_status()
+
+    # Other HTTP errors can be retried.
     response.raise_for_status()
 
     return response
